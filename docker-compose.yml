@@ -1,0 +1,35 @@
+version: '3.1'
+services:
+
+  apiserver:
+    container_name: EmsightBackend
+    build:
+      context: .
+      dockerfile: ./src/backend/Dockerfile
+    volumes:
+    - ./assets/data:/data
+    - ./src/backend:/app
+    - ./assets/model:/model
+    environment:
+      SSL_KEY: /run/secrets/ssl_key
+      SSL_CRT: /run/secrets/ssl_crt
+      PORT: 443
+    ports:
+    - 443:443
+    secrets:
+      - ssl_key
+      - ssl_crt
+
+  bert:
+    container_name: BERTaaS
+    build:
+      context: .
+      dockerfile: ./src/bert/Dockerfile
+    volumes:
+      - ./assets/model:/model
+
+secrets:
+  ssl_crt:
+    file: ./assets/ssl/server.crt
+  ssl_key:
+    file: ./assets/ssl/server.key
