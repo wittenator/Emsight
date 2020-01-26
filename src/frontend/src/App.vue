@@ -24,26 +24,15 @@
           width="100"
         />
       </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
     </v-app-bar>
 
     <v-content>
-      <v-container class="grey lighten-5" ma-0 pa-0>
+      <v-container class="grey lighten-5" ma-0 pa-0 fluid>
         <v-row no-gutters >
           <v-col cols="5">
             <List :ideas="ideas"/>
           </v-col>
-          <v-col :cols="undefined">
+          <v-col :cols=undefined>
             <Scatter :ideas="ideas"></Scatter>
           </v-col>
         </v-row>
@@ -66,12 +55,11 @@ export default {
   },
 
   data: () => ({
-    ideas: {}
+    ideas: []
   }),
 
   mounted: async function () {
-    let data = await d3.json("https://jsonplaceholder.typicode.com/todos")
-    this.ideas = data
+    this.ideas = await d3.json("http://localhost:443/ideas")
   }
 };
 </script>
