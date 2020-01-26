@@ -27,7 +27,6 @@ const buildModel = async () => {
 const train = async (autoencoder, data) => {
     await autoencoder.model
     let h = await autoencoder.model.fit(data, data, {epochs: 50,batchSize:40,shuffle:true,validationSpit:0.1});
-    data.dispose();
     return h;
 }
 
@@ -36,27 +35,13 @@ async function reduce(autoencoder, trained, data) {
     let predictor = tf.sequential();
     predictor.add(autoencoder.encoder);
 
-    console.log(data)
     let ret = predictor.predict(data);
     // eslint-disable-next-line no-console
 
-
+    return ret
     //tidyWrapper.dispose();
 }
 
-const data = tf.randomUniform([100,300]);
-buildModel().then((model) =>{
-    train(model, data).then((trained) =>{
-        reduce(model, trained, data).then((it) => {
-            console.log(trained)
-        })
 
 
-        return tf.randomUniform([100,2]).array()
-        // eslint-disable-next-line no-console
-        //console.log(it.next().value)
-
-    })
-})
-
-//export {reduce, train, buildModel}
+export {reduce, train, buildModel}

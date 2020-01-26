@@ -19,17 +19,12 @@
         },
         computed: {
             embedded: async () => {
-                const data = tf.randomUniform([100,300]);
-                buildModel().then((model) =>{
-                    train(model, data).then(async (trained) =>{
-
-                        let it = await reduce(model, trained, data)
-                        // eslint-disable-next-line no-console
-                        it.print()
-                        return tf.randomUniform([100,2]).array()
-                        // eslint-disable-next-line no-console
-                        //console.log(it.next().value)
-
+                const data = tf.randomUniform([10,300]);
+                return buildModel().then((model) =>{
+                    return train(model, data).then((trained) =>{
+                        return reduce(model, trained, data).then((it) => {
+                            return it.arraySync()
+                        })
                     })
                 })
             }
@@ -51,7 +46,7 @@
 
             //Read the data
             var x = d3.scaleLinear()
-                .domain([0, 1])
+                .domain([0, 4])
                 .range([ 0, width ]);
             svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
@@ -59,12 +54,14 @@
 
             // Add Y axis
             var y = d3.scaleLinear()
-                .domain([0, 1])
+                .domain([0, 4])
                 .range([ height, 0]);
             svg.append("g")
                 .call(d3.axisLeft(y));
 
             let data = await this.embedded;
+            // eslint-disable-next-line no-console
+            console.log(this.embedded)
 
             svg.selectAll("dot")
                 .data(data)
